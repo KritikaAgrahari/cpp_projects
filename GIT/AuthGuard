@@ -1,10 +1,36 @@
-
 #include<iostream>
 #include<fstream>
 #include<sstream>
 #include<string>
+#include<regex>  // For regex functionality
 
 using namespace std;
+
+// Function to check password strength
+bool isStrongPassword(const string& password) {
+    regex passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
+    return regex_match(password, passwordRegex);
+}
+
+// Function to check if a username already exists
+bool usernameExists(const string& username) {
+    ifstream inFile("users.txt");
+    string storedUsername;
+    while (getline(inFile, storedUsername)) {
+        if (storedUsername == username) {
+            return true;
+        }
+        // Skip password and age lines
+        getline(inFile, storedUsername);  // Skip password
+        getline(inFile, storedUsername);  // Skip age
+    }
+    return false;
+}
+
+// Function to check if a string is an integer
+bool isInteger(const string& str) {
+    return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
+}
 
 int main() {
     int a;
@@ -19,17 +45,48 @@ int main() {
 
     do {
         cout << "\nEnter your choice: ";
-        cin >> a;
+        string input;
+        cin >> input;
+
+        // Check if the input is an integer
+        if (isInteger(input)) {
+            a = stoi(input);
+        } else {
+            cout << "Invalid choice. Please enter a valid number." << endl;
+            // Clear the error state
+            cin.clear();
+            // Ignore the rest of the invalid input
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         switch (a) {
             case 1: {  // Registration
                 cout << "---------Register---------" << endl;
                 cout << "Enter username: ";
                 cin >> name;
-                cout << "Enter password: ";
+
+                if (usernameExists(name)) {
+                    cout << "Username already exists. Please choose another username." << endl;
+                    break;
+                }
+
+                cout << "Enter password (at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character): ";
                 cin >> storedPassword;
+
+                if (!isStrongPassword(storedPassword)) {
+                    cout << "Error: Password does not meet strength requirements." << endl;
+                    break;
+                }
+
                 cout << "Enter age: ";
                 cin >> age;
+
+                // Validate age
+                if (!isInteger(age)) {
+                    cout << "Error: Age must be an integer." << endl;
+                    break;
+                }
 
                 // Save to file
                 ofstream outFile("users.txt", ios::app);
@@ -88,10 +145,16 @@ int main() {
                 if (inFile.is_open() && tempFile.is_open()) {
                     while (getline(inFile, storedUsername) && getline(inFile, storedPassword) && getline(inFile, age)) {
                         if (enteredUsername == storedUsername && oldPassword == storedPassword) {
-                            cout << "Enter new password: ";
+                            cout << "Enter new password (at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character): ";
                             cin >> newPassword1;
                             cout << "Confirm new password: ";
                             cin >> newPassword2;
+
+                            if (!isStrongPassword(newPassword1)) {
+                                cout << "Error: New password does not meet strength requirements." << endl;
+                                tempFile << storedUsername << "\n" << storedPassword << "\n" << age << "\n";
+                                continue;
+                            }
 
                             if (newPassword1 == newPassword2) {
                                 tempFile << storedUsername << "\n" << newPassword1 << "\n" << age << "\n";
