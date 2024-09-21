@@ -40,7 +40,7 @@ int main() {
 
     cout << "----------1. Register------------" << endl;
     cout << "----------2. Login---------------" << endl;
-    cout << "----------3. Change Password------------" << endl;
+    cout << "----------3. Change Password----------" << endl;
     cout << "----------4. End Program--------------" << endl << endl;
 
     do {
