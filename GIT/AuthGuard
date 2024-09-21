@@ -13,6 +13,7 @@ bool isStrongPassword(const string& password) {
 }
 
 
+
 // Function to check if a username already exists
 bool usernameExists(const string& username) {
     ifstream inFile("users.txt");
@@ -21,6 +22,7 @@ bool usernameExists(const string& username) {
         if (storedUsername == username) {
             return true;
         }
+
         // Skip password and age lines
         getline(inFile, storedUsername);  // Skip password
         getline(inFile, storedUsername);  // Skip age
@@ -33,6 +35,7 @@ bool isInteger(const string& str) {
     return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
 }
 
+
 int main() {
     int a;
     string text, oldPassword, newPassword1, newPassword2, storedPassword, storedUsername, enteredUsername, enteredPassword, name, age;
@@ -44,6 +47,7 @@ int main() {
     cout << "----------3. Change Password----------" << endl;
     cout << "----------4. End Program--------------" << endl << endl;
 
+
     do {
         cout << "\nEnter your choice: ";
         string input;
@@ -52,7 +56,10 @@ int main() {
         // Check if the input is an integer
         if (isInteger(input)) {
             a = stoi(input);
-        } else {
+        } 
+
+else 
+{
             cout << "Invalid choice. Please enter a valid number." << endl;
             // Clear the error state
             cin.clear();
@@ -61,11 +68,13 @@ int main() {
             continue;
         }
 
-        switch (a) {
+        switch (a) 
+{
             case 1: {  // Registration
                 cout << "---------Register---------" << endl;
                 cout << "Enter username: ";
                 cin >> name;
+
 
                 if (usernameExists(name)) {
                     cout << "Username already exists. Please choose another username." << endl;
