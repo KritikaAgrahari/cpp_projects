@@ -12,6 +12,7 @@ bool isStrongPassword(const string& password) {
     return regex_match(password, passwordRegex);
 }
 
+
 // Function to check if a username already exists
 bool usernameExists(const string& username) {
     ifstream inFile("users.txt");
