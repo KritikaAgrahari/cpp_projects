@@ -13,7 +13,7 @@ bool isStrongPassword(const string& password) {
 
 
 
-// Function to check if a username already exists
+// Function to check if a username already exists or not
 bool usernameExists(const string& username) {
     ifstream inFile("users.txt");
     string storedUsername;
